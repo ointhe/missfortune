@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:missfortune/maingame.dart';
 import 'package:missfortune/minoblock.dart';
@@ -53,7 +54,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  double _blocksize = 80.0;
+  double _blocksize = 50.0;
+  var _xPos = 0.0,_yPos =0.0;
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -68,6 +70,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     Widget widgetMino = MinoBlock(_blocksize).getBlock;
+    Widget widgetMino2 = MinoBlock(_blocksize, minoColor: Colors.red).getBlock;
+    Widget widgetMino3 = MinoBlock(_blocksize, minoColor: Colors.blue).getBlock;
     Widget widgetGame = MainGame(_blocksize).getGame;
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
@@ -101,6 +105,10 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: widgetGame,
+            ),
             Text(
               'You have pushed the button this many timesdd:',
             ),
@@ -108,8 +116,26 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
-            widgetMino,
-            widgetGame,
+            //Draggable Widget  Target : DragTarget
+            Positioned(
+                left: _xPos,
+                top: _yPos,
+              child: Draggable(
+                child: widgetMino,
+                feedback: widgetMino2, // 드래그 중 표시할 item
+                childWhenDragging: widgetMino3, // 드래그 중 기존 위치
+                data: widgetMino,
+                onDragEnd: (dragItems) {
+                  setState(() {
+                    _xPos = dragItems.offset.dx;
+                    // if applicable, don't forget offsets like app/status bar =>+ - appBarHeight - statusBarHeight;
+                    _yPos = dragItems.offset.dy; 
+                    
+                  });
+                },
+                // dragStartBehavior: DragStartBehavior.start,
+              ),
+            ),
           ],
         ),
       ),

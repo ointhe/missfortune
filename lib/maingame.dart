@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:missfortune/minoblock.dart';
 
-class MainGame{
+class MainGame extends DragTarget<MinoBlock>{
   var _gameSize;
   var _game;
   var initColor = [
