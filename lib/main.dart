@@ -54,8 +54,14 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  double _blocksize = 50.0;
-  var _xPos = 0.0,_yPos =0.0;
+  double _blocksize = 30.0;
+  Offset position ;
+
+  @override
+  void initState() {
+    super.initState();
+    position = Offset(0.0, 0.0);
+  }
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -69,10 +75,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget widgetMino = MinoBlock(_blocksize).getBlock;
+    MinoBlock widgetMino = MinoBlock(_blocksize);
     Widget widgetMino2 = MinoBlock(_blocksize, minoColor: Colors.red).getBlock;
     Widget widgetMino3 = MinoBlock(_blocksize, minoColor: Colors.blue).getBlock;
-    Widget widgetGame = MainGame(_blocksize).getGame;
+    Widget widgetMain = MainGame(_blocksize);
+    
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -80,15 +87,16 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
+      // appBar: AppBar(
+      //   // Here we take the value from the MyHomePage object that was created by
+      //   // the App.build method, and use it to set our appbar title.
+      //   title: Text(widget.title),
+        
+      // ),
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: Stack(
           // Column is also a layout widget. It takes a list of children and
           // arranges them vertically. By default, it sizes itself to fit its
           // children horizontally, and tries to be as tall as its parent.
@@ -103,14 +111,16 @@ class _MyHomePageState extends State<MyHomePage> {
           // center the children vertically; the main axis here is the vertical
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
+          // mainAxisAlignment: MainAxisAlignment.center,
+          alignment: Alignment.center,
+          textDirection: TextDirection.ltr,        
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(15.0),
-              child: widgetGame,
+              child: widgetMain,
             ),
             Text(
-              'You have pushed the button this many timesdd:',
+              'You have pushed the button this many timesdd5:',
             ),
             Text(
               '$_counter',
@@ -118,24 +128,27 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             //Draggable Widget  Target : DragTarget
             Positioned(
-                left: _xPos,
-                top: _yPos,
+                left: position.dx,
+                top: position.dy,
               child: Draggable(
-                child: widgetMino,
+                child: widgetMino.getBlock,
                 feedback: widgetMino2, // 드래그 중 표시할 item
-                childWhenDragging: widgetMino3, // 드래그 중 기존 위치
-                data: widgetMino,
-                onDragEnd: (dragItems) {
+                childWhenDragging: widgetMino3, // 드래그 중 기존 위치 
+                data: widgetMino, // 드랍 시 제공할 데이터
+                onDragEnd: (details) {
                   setState(() {
-                    _xPos = dragItems.offset.dx;
+                    position = Offset(details.offset.dx, details.offset.dy);
                     // if applicable, don't forget offsets like app/status bar =>+ - appBarHeight - statusBarHeight;
-                    _yPos = dragItems.offset.dy; 
-                    
+                    // _yPos = ; 
                   });
                 },
+                // onDraggableCanceled: (Velocity velocity, Offset offset){
+                //   setState(() => position = offset);
+                // },
                 // dragStartBehavior: DragStartBehavior.start,
               ),
             ),
+            
           ],
         ),
       ),

@@ -105,7 +105,8 @@ class MinoBlock {
   get getBlock =>_block;
   get getBlockColor => _blockColor;
   get getBlockIdx => _blockIdx;
-
+  get getHeight => _blockSize*3;
+  get getPoint => _blockPoint;
   void minoType(MinoType minoType) {
     _blockType = minoType;
     switch (_blockType) {
