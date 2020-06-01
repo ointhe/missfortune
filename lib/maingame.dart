@@ -1,93 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:missfortune/minoblock.dart';
 
-class MainGame extends StatelessWidget {
+class MainGame{
   var _gameSize;
   // var _game;
   var _idx = 0;
-  var _initColor = [
+  var initColor = [
     Colors.black26,
     Colors.black12,
+    Colors.black26,
+    Colors.black12,
+    Colors.black26,
+    Colors.black12,
+    Colors.black26,
+    Colors.black12,
+    Colors.black26,
   ];
-  MainGame(gameSize, {initColors}) {
+  var mainPoint = [
+    0,0,0,
+    0,0,0,
+    0,0,0    
+  ];
+  MainGame(gameSize, {List<Color> initColors}) {
     _gameSize = gameSize;
-    _initColor = initColors;
+    initColor = initColors == null ? initColor : initColors;
     // initGame();
   }
-
-  @override
-  Widget build(BuildContext context) {
-    // return Container(
-    //         width: _gameSize * 3,
-    //         height: _gameSize * 3,
-    //         child: Column(
-    //           children: <Widget>[
-    //             Row(
-    //               children: <Widget>[
-    //                 Container(
-    //                   width: _gameSize,
-    //                   height: _gameSize,
-    //                   color: _initColor[_idx++ % 2],
-    //                 ),
-    //                 Container(
-    //                   width: _gameSize,
-    //                   height: _gameSize,
-    //                   color: _initColor[_idx++ % 2],
-    //                 ),
-    //                 Container(
-    //                   width: _gameSize,
-    //                   height: _gameSize,
-    //                   color: _initColor[_idx++ % 2],
-    //                 ),
-    //               ],
-    //             ),
-    //             Row(
-    //               children: <Widget>[
-    //                 Container(
-    //                   width: _gameSize,
-    //                   height: _gameSize,
-    //                   color: _initColor[_idx++ % 2],
-    //                 ),
-    //                 Container(
-    //                   width: _gameSize,
-    //                   height: _gameSize,
-    //                   color: _initColor[_idx++ % 2],
-    //                 ),
-    //                 Container(
-    //                   width: _gameSize,
-    //                   height: _gameSize,
-    //                   color: _initColor[_idx++ % 2],
-    //                 ),
-    //               ],
-    //             ),
-    //             Row(
-    //               children: <Widget>[
-    //                 Container(
-    //                   width: _gameSize,
-    //                   height: _gameSize,
-    //                   color: _initColor[_idx++ % 2],
-    //                 ),
-    //                 Container(
-    //                   width: _gameSize,
-    //                   height: _gameSize,
-    //                   color: _initColor[_idx++ % 2],
-    //                 ),
-    //                 Container(
-    //                   width: _gameSize,
-    //                   height: _gameSize,
-    //                   color: _initColor[_idx++ % 2],
-    //                 ),
-    //               ],
-    //             ),
-    //           ],
-    //         ));
-    return DragTarget(
-      onAccept: (MinoBlock data) {
-        _initColor[1] = Colors.red;
-        print(data.getPoint.toString());
-      },
-      onWillAccept: (data)=>true,
-      builder: (context, List<MinoBlock> cd, rd) {
+  Widget createContainer() {
+    _idx = _idx > 8 ? 0 : _idx;
+  return Container(
+        width: _gameSize,
+        height: _gameSize,
+        color: initColor[_idx++],
+      );
+  }
+  Widget getBuild(){
+    // return DragTarget(
+    //   onAccept: (MinoBlock data) {
+    //       _initColor[1] = Colors.red;
+    //       print(data.getPoint.toString() + ' ' + _initColor.toList().toString());
+    //   },
+    //   onWillAccept: (MinoBlock data) {
+        
+    //     _initColor[0] = Colors.blue;
+    //     return true;
+    //   },
+    //   builder: (context, List<MinoBlock> cd, rd) {
         return Container(
             width: _gameSize * 3,
             height: _gameSize * 3,
@@ -95,65 +53,72 @@ class MainGame extends StatelessWidget {
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    Container(
-                      width: _gameSize,
-                      height: _gameSize,
-                      color: _initColor[_idx++ % 2],
-                    ),
-                    Container(
-                      width: _gameSize,
-                      height: _gameSize,
-                      color: _initColor[_idx++ % 2],
-                    ),
-                    Container(
-                      width: _gameSize,
-                      height: _gameSize,
-                      color: _initColor[_idx++ % 2],
-                    ),
+                    createContainer(),
+                    createContainer(),
+                    createContainer(),
                   ],
                 ),
                 Row(
                   children: <Widget>[
-                    Container(
-                      width: _gameSize,
-                      height: _gameSize,
-                      color: _initColor[_idx++ % 2],
-                    ),
-                    Container(
-                      width: _gameSize,
-                      height: _gameSize,
-                      color: _initColor[_idx++ % 2],
-                    ),
-                    Container(
-                      width: _gameSize,
-                      height: _gameSize,
-                      color: _initColor[_idx++ % 2],
-                    ),
+                    createContainer(),
+                    createContainer(),
+                    createContainer(),
                   ],
                 ),
                 Row(
                   children: <Widget>[
-                    Container(
-                      width: _gameSize,
-                      height: _gameSize,
-                      color: _initColor[_idx++ % 2],
-                    ),
-                    Container(
-                      width: _gameSize,
-                      height: _gameSize,
-                      color: _initColor[_idx++ % 2],
-                    ),
-                    Container(
-                      width: _gameSize,
-                      height: _gameSize,
-                      color: _initColor[_idx++ % 2],
-                    ),
+                    createContainer(),
+                    createContainer(),
+                    createContainer(),
                   ],
                 ),
               ],
             ));
-      },
-    );
+      // },
+    // );
   }
-
+  // @override
+  // Widget build(BuildContext context) {
+  //   return DragTarget(
+  //     onAccept: (MinoBlock data) {
+  //         _initColor[1] = Colors.red;
+  //         print(data.getPoint.toString() + ' ' + _initColor.toList().toString());
+  //     },
+  //     onWillAccept: (MinoBlock data) {
+        
+  //       _initColor[0] = Colors.blue;
+  //       return true;
+  //     },
+  //     builder: (context, List<MinoBlock> cd, rd) {
+  //       return Container(
+  //           width: _gameSize * 3,
+  //           height: _gameSize * 3,
+  //           child: Column(
+  //             children: <Widget>[
+  //               Row(
+  //                 children: <Widget>[
+  //                   createContainer(),
+  //                   createContainer(),
+  //                   createContainer(),
+  //                 ],
+  //               ),
+  //               Row(
+  //                 children: <Widget>[
+  //                   createContainer(),
+  //                   createContainer(),
+  //                   createContainer(),
+  //                 ],
+  //               ),
+  //               Row(
+  //                 children: <Widget>[
+  //                   createContainer(),
+  //                   createContainer(),
+  //                   createContainer(),
+  //                 ],
+  //               ),
+  //             ],
+  //           ));
+  //     },
+  //   );
+  // }
 }

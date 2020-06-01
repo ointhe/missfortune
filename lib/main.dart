@@ -7,6 +7,12 @@ void main() {
   runApp(MyApp());
 }
 
+enum LevelColor {
+  green,
+  blue,
+  red,
+}
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -54,14 +60,15 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  double _blocksize = 30.0;
-  Offset position ;
+  double _blocksize = 50.0;
+  Offset position;
 
   @override
   void initState() {
     super.initState();
     position = Offset(0.0, 0.0);
   }
+
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -78,8 +85,8 @@ class _MyHomePageState extends State<MyHomePage> {
     MinoBlock widgetMino = MinoBlock(_blocksize);
     Widget widgetMino2 = MinoBlock(_blocksize, minoColor: Colors.red).getBlock;
     Widget widgetMino3 = MinoBlock(_blocksize, minoColor: Colors.blue).getBlock;
-    Widget widgetMain = MainGame(_blocksize);
-    
+    var widgetMain = MainGame(_blocksize);
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -91,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
       //   // Here we take the value from the MyHomePage object that was created by
       //   // the App.build method, and use it to set our appbar title.
       //   title: Text(widget.title),
-        
+
       // ),
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -113,42 +120,84 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           // mainAxisAlignment: MainAxisAlignment.center,
           alignment: Alignment.center,
-          textDirection: TextDirection.ltr,        
+          textDirection: TextDirection.ltr,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: widgetMain,
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: DragTarget(
+                    onAccept: (MinoBlock data) {
+                      // setState(() {
+                      var dataIdx = 0;
+                      widgetMain.mainPoint.forEach((e) {
+                        widgetMain.mainPoint[dataIdx] =
+                            e + data.getPoint[dataIdx++];
+                      });
+                      dataIdx = 0;
+                      widgetMain.mainPoint.forEach((e) {
+                        widgetMain.initColor[dataIdx++] = e == 1
+                            ? Colors.green
+                            : (e == 2
+                                ? Colors.blue
+                                : (e == 3 ? Colors.red : Colors.black12));
+                      });
+
+                      print('main:' + widgetMain.mainPoint.toString());
+                      // widgetMain.initColor = [
+                      //   Colors.red,Colors.red,Colors.red,
+                      //   Colors.red,Colors.red,Colors.red,
+                      //   Colors.red,Colors.red,Colors.red
+                      //   ];
+                      // List<Color>()..addAll(widgetMain.getInitColor.getRange(0,8))..add(Colors.red);
+                      // });
+                      print(data.getPoint.toString() +
+                          ' ' +
+                          widgetMain.initColor.toList().toString());
+                    },
+                    onWillAccept: (MinoBlock data) {
+                      widgetMain.initColor = List<Color>()
+                        ..addAll(widgetMain.initColor.getRange(0, 8))
+                        ..add(Colors.black);
+                      return true;
+                    },
+                    builder: (context, List<dynamic> cd, rd) {
+                      return widgetMain.getBuild();
+                    },
+                  ),
+                ),
+                Text(
+                  'You have pushed the button this many timesdd5:',
+                ),
+                Text(
+                  '$_counter',
+                  style: Theme.of(context).textTheme.headline4,
+                ),
+                //Draggable Widget  Target : DragTarget
+                Positioned(
+                  left: position.dx,
+                  top: position.dy,
+                  child: Draggable(
+                    child: widgetMino.getBlock,
+                    feedback: widgetMino2, // 드래그 중 표시할 item
+                    childWhenDragging: widgetMino3, // 드래그 중 기존 위치
+                    data: widgetMino, // 드랍 시 제공할 데이터
+                    onDragEnd: (details) {
+                      // setState(() {
+                      // position = Offset(details.offset.dx, details.offset.dy);
+                      // if applicable, don't forget offsets like app/status bar =>+ - appBarHeight - statusBarHeight;
+                      // _yPos = ;
+                      // });
+                    },
+                    // onDraggableCanceled: (Velocity velocity, Offset offset){
+                    //   setState(() => position = offset);
+                    // },
+                    // dragStartBehavior: DragStartBehavior.start,
+                  ),
+                ),
+              ],
             ),
-            Text(
-              'You have pushed the button this many timesdd5:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            //Draggable Widget  Target : DragTarget
-            Positioned(
-                left: position.dx,
-                top: position.dy,
-              child: Draggable(
-                child: widgetMino.getBlock,
-                feedback: widgetMino2, // 드래그 중 표시할 item
-                childWhenDragging: widgetMino3, // 드래그 중 기존 위치 
-                data: widgetMino, // 드랍 시 제공할 데이터
-                onDragEnd: (details) {
-                  setState(() {
-                    position = Offset(details.offset.dx, details.offset.dy);
-                    // if applicable, don't forget offsets like app/status bar =>+ - appBarHeight - statusBarHeight;
-                    // _yPos = ; 
-                  });
-                },
-                // onDraggableCanceled: (Velocity velocity, Offset offset){
-                //   setState(() => position = offset);
-                // },
-                // dragStartBehavior: DragStartBehavior.start,
-              ),
-            ),
-            
           ],
         ),
       ),
