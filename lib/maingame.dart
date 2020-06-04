@@ -6,20 +6,20 @@ class MainGame{
   // var _game;
   var _idx = 0;
   var initColor = [
-    Colors.black26,
-    Colors.black12,
-    Colors.black26,
-    Colors.black12,
-    Colors.black26,
-    Colors.black12,
-    Colors.black26,
-    Colors.black12,
-    Colors.black26,
+    Colors.white,
+    Colors.white,
+    Colors.white,
+    Colors.white,
+    Colors.white,
+    Colors.white,
+    Colors.white,
+    Colors.white,
+    Colors.white,
   ];
   var mainPoint = [
-    0,0,0,
-    0,0,0,
-    0,0,0    
+    0.0,0.0,0.0,
+    0.0,0.0,0.0,
+    0.0,0.0,0.0    
   ];
   MainGame(gameSize, {List<Color> initColors}) {
     _gameSize = gameSize;
@@ -27,7 +27,7 @@ class MainGame{
     // initGame();
   }
   Widget createContainer() {
-    _idx = _idx > 8 ? 0 : _idx;
+    _idx = _idx >= initColor.length ? 0 : _idx;
   return Container(
         width: _gameSize,
         height: _gameSize,
@@ -49,6 +49,7 @@ class MainGame{
         return Container(
             width: _gameSize * 3,
             height: _gameSize * 3,
+            color: Colors.white,
             child: Column(
               children: <Widget>[
                 Row(
