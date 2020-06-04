@@ -41,6 +41,9 @@ class MinoBlock {
     _position = Offset(0.0, 0.0);
     var idx = 0;
     minoType(minotype);
+    resetBlock(idx: idx);
+  }
+  void resetBlock({idx = 0}){
     _block = Container(
       height: _blockSize * 3,
       width: _blockSize * 3,
@@ -74,7 +77,6 @@ class MinoBlock {
       ),
     );
   }
-
   get getBlock => _block;
   get getBlockColor => _blockColor;
   get getBlockIdx => _blockIdx;
@@ -90,8 +92,22 @@ class MinoBlock {
     _bgColor = color;
   }
 
+  void rotatePoint(){
+    var tPoint = _blockPoint.toList();
+    tPoint[1] = _blockPoint[0];
+    tPoint[2] = _blockPoint[1];
+    tPoint[5] = _blockPoint[2];
+    tPoint[0] = _blockPoint[3];
+    tPoint[4] = _blockPoint[4];
+    tPoint[8] = _blockPoint[5];
+    tPoint[3] = _blockPoint[6];
+    tPoint[6] = _blockPoint[7];
+    tPoint[7] = _blockPoint[8];
+
+    _blockPoint = tPoint;
+  }
   bool movePoint(MinoDirection direction) {
-    print('pppp:1');
+
     var tBlockPoint = _blockPoint.toList();
     switch (direction) {
       case MinoDirection.RIGHT:

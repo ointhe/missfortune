@@ -69,11 +69,14 @@ class _MyHomePageState extends State<MyHomePage> {
   var backGdClr;
   List<Widget> wList;
   var isOnAccept;
+
+  List<Widget> blocks;
   @override
   void initState() {
     super.initState();
     minoList = List<MinoBlock>();
     wList = List<Widget>();
+    blocks = List<Widget>();
     minoList.add(MinoBlock(_minimumblocksize, MinoType.BLOCK_Z_MINO));
     minoList.add(MinoBlock(_minimumblocksize, MinoType.BLOCK_T_MINO));
     minoList.add(MinoBlock(_minimumblocksize, MinoType.BLOCK_L_MINO));
@@ -109,7 +112,9 @@ class _MyHomePageState extends State<MyHomePage> {
     position = Offset(0.0, 0.0);
     getMinos();
   }
-
+  void resetMainGame(){
+    widgetMain = MainGame(_blocksize);
+  }
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -118,9 +123,12 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
       _counter++;
+      resetMainGame();
     });
   }
-
+  void setWList(idx,Widget w){
+    wList[idx] = w;
+  }
   List<Widget> getMinos() {
     if (minoList.isEmpty) {
       // wList.add(Container(
@@ -130,13 +138,15 @@ class _MyHomePageState extends State<MyHomePage> {
       // ));
       return wList;
     }
-    for (var i = 0; i < minoList.length; i++)
+    wList.clear();
+    for (var i = 0; i < minoList.length; i++) {
+      blocks.add(minoList[i].getBlock);
       wList.add(Container(
         width: (_minimumblocksize + 5) * 3,
         height: (_minimumblocksize + 5) * 3,
         // color: Colors.white38,
-        decoration:
-            new BoxDecoration(border: new Border.all(width: 2.0,color: Colors.white)),
+        decoration: new BoxDecoration(
+            border: new Border.all(width: 2.0, color: Colors.white)),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Stack(
@@ -147,53 +157,86 @@ class _MyHomePageState extends State<MyHomePage> {
               Positioned(
                 left: minoList[i].getPosition.dx,
                 top: minoList[i].getPosition.dy,
-                child: Draggable(
-                  child: minoList[i].getBlock,
-                  feedback: MinoBlock(_blocksize, minoList[i].getType)
-                      .getBlock, // 드래그 중 표시할 item
-                  childWhenDragging: minoList[i].getBlock, // 드래그 중 기존 위치
-                  data: minoList[i], // 드랍 시 제공할 데이터
-                  onDragEnd: (details) {
-                    minoList[i].position =
-                        Offset(details.offset.dx, details.offset.dy);
-                    if (isOnAccept) {
-                      if (minoList[i].getPosition.dx - mainPosition.dx > 40.0) {
-                        minoList[i].movePoint(MinoDirection.RIGHT);
+                child: GestureDetector(
+                  // onDoubleTap: () {
+                  //     minoList[i].rotatePoint();
+                  //     blocks[i] = minoList[i].getBlock;
+                  // },
+                  child: Draggable(
+                    child: blocks[i],// minoList[i].getBlock,
+                    feedback: // blocks[i],
+                        MinoBlock(_blocksize, minoList[i].getType)
+                            .getBlock, // 드래그 중 표시할 item
+                    childWhenDragging: minoList[i].getBlock, // 드래그 중 기존 위치
+                    data: minoList[i], // 드랍 시 제공할 데이터
+                    onDragEnd: (details) {
+                      minoList[i].position =
+                          Offset(details.offset.dx, details.offset.dy);
+                      if (isOnAccept) {
+                        if (minoList[i].getPosition.dx - mainPosition.dx >
+                            40.0) {
+                          minoList[i].movePoint(MinoDirection.RIGHT);
+                        }
+                        if (minoList[i].getPosition.dx - mainPosition.dx >
+                            90.0) {
+                          minoList[i].movePoint(MinoDirection.RIGHT);
+                        }
+                        if (minoList[i].getPosition.dy - mainPosition.dy >
+                            40.0) {
+                          minoList[i].movePoint(MinoDirection.BOTTOM);
+                        }
+                        if (minoList[i].getPosition.dy - mainPosition.dy >
+                            90.0) {
+                          minoList[i].movePoint(MinoDirection.BOTTOM);
+                        }
+                        var dataIdx = 0;
+                        widgetMain.mainPoint.forEach((e) {
+                          widgetMain.mainPoint[dataIdx] =
+                              e + minoList[i].getPoint[dataIdx++];
+                        });
+                        dataIdx = 0;
+                        widgetMain.mainPoint.forEach((e) {
+                          widgetMain.initColor[dataIdx] = Color.fromRGBO(
+                              mainGamesetColor.red,
+                              mainGamesetColor.green,
+                              mainGamesetColor.blue,
+                              widgetMain.mainPoint[dataIdx++]);
+                        });
+
+                        
+                          minoList[i] = new MinoBlock(
+                              _minimumblocksize,
+                              MinoType.values[
+                                  Random().nextInt(MinoType.values.length)]);
+                          blocks[i] = minoList[i].getBlock;
+                          isOnAccept = false;
+                          print('onDragEnd');
                       }
-                      if (minoList[i].getPosition.dx - mainPosition.dx > 90.0) {
-                        minoList[i].movePoint(MinoDirection.RIGHT);
-                      }
-                      if (minoList[i].getPosition.dy - mainPosition.dy > 40.0) {
-                        minoList[i].movePoint(MinoDirection.BOTTOM);
-                      }
-                      if (minoList[i].getPosition.dy - mainPosition.dy > 90.0) {
-                        minoList[i].movePoint(MinoDirection.BOTTOM);
-                      }
-                      var dataIdx = 0;
-                      widgetMain.mainPoint.forEach((e) {
-                        widgetMain.mainPoint[dataIdx] =
-                            e + minoList[i].getPoint[dataIdx++];
-                      });
-                      dataIdx = 0;
-                      widgetMain.mainPoint.forEach((e) {
-                        widgetMain.initColor[dataIdx] = Color.fromRGBO(
-                            mainGamesetColor.red,
-                            mainGamesetColor.green,
-                            mainGamesetColor.blue,
-                            widgetMain.mainPoint[dataIdx++]);
-                      });
-                    }
-                  },
+                    },
+                    onDragCompleted: ()=> onDragFinish(), 
+                    //(){
+                    //   setState(() {
+                    //     print('onDragCompleted');
+                    //   });
+                    // },
+                  ),
                 ),
               ),
             ],
           ),
         ),
       ));
+    }
     print(':::::::::::::::::::::::::::' + wList.toList().toString());
     return wList;
   }
 
+  void onDragFinish(){
+    setState(() {
+      print('onDragFinish');
+    });
+  }
+  
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -274,6 +317,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           isOnAccept = true;
                           print('offset' + position.toString());
                           print('main:' + widgetMain.mainPoint.toString());
+                          wList = getMinos();
+                          print('onAccept');
                           // widgetMain.initColor = [
                           //   Colors.red,Colors.red,Colors.red,
                           //   Colors.red,Colors.red,Colors.red,
