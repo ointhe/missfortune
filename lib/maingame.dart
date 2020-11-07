@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:missfortune/minoblock.dart';
 
-class MainGame{
+class MainGame {
   var _gameSize;
   // var _game;
   var _idx = 0;
@@ -16,11 +16,7 @@ class MainGame{
     Colors.white,
     Colors.white,
   ];
-  var mainPoint = [
-    0.0,0.0,0.0,
-    0.0,0.0,0.0,
-    0.0,0.0,0.0    
-  ];
+  var mainPoint = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
   MainGame(gameSize, {List<Color> initColors}) {
     _gameSize = gameSize;
     initColor = initColors == null ? initColor : initColors;
@@ -28,54 +24,55 @@ class MainGame{
   }
   Widget createContainer() {
     _idx = _idx >= initColor.length ? 0 : _idx;
-  return Container(
-        width: _gameSize,
-        height: _gameSize,
-        color: initColor[_idx++],
-      );
+    return Container(
+      width: _gameSize,
+      height: _gameSize,
+      color: initColor[_idx++],
+    );
   }
-  Widget getBuild(){
+
+  Widget getBuild() {
     // return DragTarget(
     //   onAccept: (MinoBlock data) {
     //       _initColor[1] = Colors.red;
     //       print(data.getPoint.toString() + ' ' + _initColor.toList().toString());
     //   },
     //   onWillAccept: (MinoBlock data) {
-        
+
     //     _initColor[0] = Colors.blue;
     //     return true;
     //   },
     //   builder: (context, List<MinoBlock> cd, rd) {
-        return Container(
-            width: _gameSize * 3,
-            height: _gameSize * 3,
-            color: Colors.white,
-            child: Column(
+    return Container(
+        width: _gameSize * 3,
+        height: _gameSize * 3,
+        color: Colors.white,
+        child: Column(
+          children: <Widget>[
+            Row(
               children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    createContainer(),
-                    createContainer(),
-                    createContainer(),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    createContainer(),
-                    createContainer(),
-                    createContainer(),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    createContainer(),
-                    createContainer(),
-                    createContainer(),
-                  ],
-                ),
+                createContainer(),
+                createContainer(),
+                createContainer(),
               ],
-            ));
-      // },
+            ),
+            Row(
+              children: <Widget>[
+                createContainer(),
+                createContainer(),
+                createContainer(),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                createContainer(),
+                createContainer(),
+                createContainer(),
+              ],
+            ),
+          ],
+        ));
+    // },
     // );
   }
   // @override
@@ -86,7 +83,7 @@ class MainGame{
   //         print(data.getPoint.toString() + ' ' + _initColor.toList().toString());
   //     },
   //     onWillAccept: (MinoBlock data) {
-        
+
   //       _initColor[0] = Colors.blue;
   //       return true;
   //     },

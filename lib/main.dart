@@ -56,7 +56,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   double _blocksize = 50.0;
-  double _minimumblocksize = 20.0;
+  double _minimumblocksize = 15.0;
   Offset position;
   Offset mainPosition;
   var setReverse = true;
@@ -112,9 +112,11 @@ class _MyHomePageState extends State<MyHomePage> {
     position = Offset(0.0, 0.0);
     getMinos();
   }
-  void resetMainGame(){
+
+  void resetMainGame() {
     widgetMain = MainGame(_blocksize);
   }
+
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -126,9 +128,11 @@ class _MyHomePageState extends State<MyHomePage> {
       resetMainGame();
     });
   }
-  void setWList(idx,Widget w){
+
+  void setWList(idx, Widget w) {
     wList[idx] = w;
   }
+
   List<Widget> getMinos() {
     if (minoList.isEmpty) {
       // wList.add(Container(
@@ -157,69 +161,64 @@ class _MyHomePageState extends State<MyHomePage> {
               Positioned(
                 left: minoList[i].getPosition.dx,
                 top: minoList[i].getPosition.dy,
-                child: GestureDetector(
-                  // onDoubleTap: () {
-                  //     minoList[i].rotatePoint();
-                  //     blocks[i] = minoList[i].getBlock;
-                  // },
-                  child: Draggable(
-                    child: blocks[i],// minoList[i].getBlock,
-                    feedback: // blocks[i],
-                        MinoBlock(_blocksize, minoList[i].getType)
-                            .getBlock, // 드래그 중 표시할 item
-                    childWhenDragging: minoList[i].getBlock, // 드래그 중 기존 위치
-                    data: minoList[i], // 드랍 시 제공할 데이터
-                    onDragEnd: (details) {
-                      minoList[i].position =
-                          Offset(details.offset.dx, details.offset.dy);
-                      if (isOnAccept) {
-                        if (minoList[i].getPosition.dx - mainPosition.dx >
-                            40.0) {
-                          minoList[i].movePoint(MinoDirection.RIGHT);
-                        }
-                        if (minoList[i].getPosition.dx - mainPosition.dx >
-                            90.0) {
-                          minoList[i].movePoint(MinoDirection.RIGHT);
-                        }
-                        if (minoList[i].getPosition.dy - mainPosition.dy >
-                            40.0) {
-                          minoList[i].movePoint(MinoDirection.BOTTOM);
-                        }
-                        if (minoList[i].getPosition.dy - mainPosition.dy >
-                            90.0) {
-                          minoList[i].movePoint(MinoDirection.BOTTOM);
-                        }
-                        var dataIdx = 0;
-                        widgetMain.mainPoint.forEach((e) {
-                          widgetMain.mainPoint[dataIdx] =
-                              e + minoList[i].getPoint[dataIdx++];
-                        });
-                        dataIdx = 0;
-                        widgetMain.mainPoint.forEach((e) {
-                          widgetMain.initColor[dataIdx] = Color.fromRGBO(
-                              mainGamesetColor.red,
-                              mainGamesetColor.green,
-                              mainGamesetColor.blue,
-                              widgetMain.mainPoint[dataIdx++]);
-                        });
-
-                        
-                          minoList[i] = new MinoBlock(
-                              _minimumblocksize,
-                              MinoType.values[
-                                  Random().nextInt(MinoType.values.length)]);
-                          blocks[i] = minoList[i].getBlock;
-                          isOnAccept = false;
-                          print('onDragEnd');
+                // child: GestureDetector(
+                // onDoubleTap: () {
+                //     minoList[i].rotatePoint();
+                //     blocks[i] = minoList[i].getBlock;
+                // },
+                child: Draggable(
+                  child: blocks[i], // minoList[i].getBlock,
+                  feedback: //blocks[i],
+                      MinoBlock(_blocksize, minoList[i].getType)
+                          .getBlock, // 드래그 중 표시할 item
+                  childWhenDragging: minoList[i].getBlock, // 드래그 중 기존 위치
+                  data: minoList[i], // 드랍 시 제공할 데이터
+                  onDragEnd: (details) async {
+                    minoList[i].position =
+                        Offset(details.offset.dx, details.offset.dy);
+                    if (isOnAccept) {
+                      if (minoList[i].getPosition.dx - mainPosition.dx > 40.0) {
+                        minoList[i].movePoint(MinoDirection.RIGHT);
                       }
-                    },
-                    onDragCompleted: ()=> onDragFinish(), 
-                    //(){
-                    //   setState(() {
-                    //     print('onDragCompleted');
-                    //   });
-                    // },
-                  ),
+                      if (minoList[i].getPosition.dx - mainPosition.dx > 90.0) {
+                        minoList[i].movePoint(MinoDirection.RIGHT);
+                      }
+                      if (minoList[i].getPosition.dy - mainPosition.dy > 40.0) {
+                        minoList[i].movePoint(MinoDirection.BOTTOM);
+                      }
+                      if (minoList[i].getPosition.dy - mainPosition.dy > 90.0) {
+                        minoList[i].movePoint(MinoDirection.BOTTOM);
+                      }
+                      var dataIdx = 0;
+                      widgetMain.mainPoint.forEach((e) {
+                        widgetMain.mainPoint[dataIdx] =
+                            e + minoList[i].getPoint[dataIdx++];
+                      });
+                      dataIdx = 0;
+                      widgetMain.mainPoint.forEach((e) {
+                        widgetMain.initColor[dataIdx] = Color.fromRGBO(
+                            mainGamesetColor.red,
+                            mainGamesetColor.green,
+                            mainGamesetColor.blue,
+                            widgetMain.mainPoint[dataIdx++]);
+                      });
+
+                      minoList[i] = new MinoBlock(
+                          _minimumblocksize,
+                          MinoType.values[
+                              Random().nextInt(MinoType.values.length)]);
+                      blocks[i] = minoList[i].getBlock;
+                      isOnAccept = false;
+                      print('onDragEnd');
+                    }
+                  },
+
+                  //(){
+                  //   setState(() {
+                  //     print('onDragCompleted');
+                  //   });
+                  // },
+                  // ),
                 ),
               ),
             ],
@@ -231,12 +230,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return wList;
   }
 
-  void onDragFinish(){
-    setState(() {
-      print('onDragFinish');
-    });
-  }
-  
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -331,9 +324,9 @@ class _MyHomePageState extends State<MyHomePage> {
                               widgetMain.initColor.toList().toString());
                         },
                         onWillAccept: (MinoBlock data) {
-                          // widgetMain.initColor = List<Color>()
-                          //   ..addAll(widgetMain.initColor.getRange(0, 8))
-                          //   ..add(Colors.black);
+                          widgetMain.initColor = List<Color>()
+                            ..addAll(widgetMain.initColor.getRange(0, 8))
+                            ..add(Colors.black);
                           isOnAccept = false;
                           return true;
                         },
@@ -342,80 +335,80 @@ class _MyHomePageState extends State<MyHomePage> {
                         },
                       ),
                     ),
-                    Text(
-                      'You have pushed the button this many timesdd5:',
-                    ),
+                    // Text(
+                    //   'You have pushed the button this many timesdd5:',
+                    // ),
                     Text(
                       '$_counter',
                       style: Theme.of(context).textTheme.headline4,
                     ),
                     //Draggable Widget  Target : DragTarget
-                    Positioned(
-                      left: position.dx,
-                      top: position.dy,
-                      child: Draggable(
-                        child: widgetMino.getBlock,
-                        feedback: widgetMino2, // 드래그 중 표시할 item
-                        childWhenDragging: widgetMino3, // 드래그 중 기존 위치
-                        data: widgetMino, // 드랍 시 제공할 데이터
-                        onDragEnd: (details) {
-                          position =
-                              Offset(details.offset.dx, details.offset.dy);
-                          print('aaaaaaaaaaaaa : ' + widgetMain.toString());
-                          print('??' + position.toString());
-                          if (isOnAccept) {
-                            print('position.dx -  mainPosition.dx = ' +
-                                (position.dx - mainPosition.dx).toString());
-                            if (position.dx - mainPosition.dx > 40.0) {
-                              print('right!');
-                              widgetMino.movePoint(MinoDirection.RIGHT);
-                            }
-                            if (position.dx - mainPosition.dx > 90.0) {
-                              widgetMino.movePoint(MinoDirection.RIGHT);
-                            }
-                            if (position.dy - mainPosition.dy > 40.0) {
-                              print('bottom!');
-                              widgetMino.movePoint(MinoDirection.BOTTOM);
-                            }
-                            if (position.dy - mainPosition.dy > 90.0) {
-                              widgetMino.movePoint(MinoDirection.BOTTOM);
-                            }
-                            print('toStr : ' + widgetMino.getPoint.toString());
-                            var dataIdx = 0;
-                            widgetMain.mainPoint.forEach((e) {
-                              widgetMain.mainPoint[dataIdx] =
-                                  e + widgetMino.getPoint[dataIdx++];
-                            });
-                            dataIdx = 0;
-                            widgetMain.mainPoint.forEach((e) {
-                              widgetMain.initColor[dataIdx] = Color.fromRGBO(
-                                  mainGamesetColor.red,
-                                  mainGamesetColor.green,
-                                  mainGamesetColor.blue,
-                                  widgetMain.mainPoint[dataIdx++]);
-                            });
-                          }
-                          // if applicable, don't forget offsets like app/status bar =>+ - appBarHeight - statusBarHeight;
-                          // _yPos = ;
-                          // });
-                        },
-                        // onDraggableCanceled: (Velocity velocity, Offset offset){
-                        //   setState(() => position = offset);
-                        // },
-                        // dragStartBehavior: DragStartBehavior.start,
-                      ),
-                    ),
+                    // Positioned(
+                    //   left: position.dx,
+                    //   top: position.dy,
+                    //   child: Draggable(
+                    //     child: widgetMino.getBlock,
+                    //     feedback: widgetMino2, // 드래그 중 표시할 item
+                    //     childWhenDragging: widgetMino3, // 드래그 중 기존 위치
+                    //     data: widgetMino, // 드랍 시 제공할 데이터
+                    //     onDragEnd: (details) {
+                    //       position =
+                    //           Offset(details.offset.dx, details.offset.dy);
+                    //       print('aaaaaaaaaaaaa : ' + widgetMain.toString());
+                    //       print('??' + position.toString());
+                    //       if (isOnAccept) {
+                    //         print('position.dx -  mainPosition.dx = ' +
+                    //             (position.dx - mainPosition.dx).toString());
+                    //         if (position.dx - mainPosition.dx > 40.0) {
+                    //           print('right!');
+                    //           widgetMino.movePoint(MinoDirection.RIGHT);
+                    //         }
+                    //         if (position.dx - mainPosition.dx > 90.0) {
+                    //           widgetMino.movePoint(MinoDirection.RIGHT);
+                    //         }
+                    //         if (position.dy - mainPosition.dy > 40.0) {
+                    //           print('bottom!');
+                    //           widgetMino.movePoint(MinoDirection.BOTTOM);
+                    //         }
+                    //         if (position.dy - mainPosition.dy > 90.0) {
+                    //           widgetMino.movePoint(MinoDirection.BOTTOM);
+                    //         }
+                    //         print('toStr : ' + widgetMino.getPoint.toString());
+                    //         var dataIdx = 0;
+                    //         widgetMain.mainPoint.forEach((e) {
+                    //           widgetMain.mainPoint[dataIdx] =
+                    //               e + widgetMino.getPoint[dataIdx++];
+                    //         });
+                    //         dataIdx = 0;
+                    //         widgetMain.mainPoint.forEach((e) {
+                    //           widgetMain.initColor[dataIdx] = Color.fromRGBO(
+                    //               mainGamesetColor.red,
+                    //               mainGamesetColor.green,
+                    //               mainGamesetColor.blue,
+                    //               widgetMain.mainPoint[dataIdx++]);
+                    //         });
+                    //       }
+                    //       // if applicable, don't forget offsets like app/status bar =>+ - appBarHeight - statusBarHeight;
+                    //       // _yPos = ;
+                    //       // });
+                    //     },
+                    //     // onDraggableCanceled: (Velocity velocity, Offset offset){
+                    //     //   setState(() => position = offset);
+                    //     // },
+                    //     // dragStartBehavior: DragStartBehavior.start,
+                    //   ),
+                    // ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         ...wList,
-                        Container(
-                          width: 5,
-                          height: 5,
-                          color: Colors.red,
-                        ),
+                        // Container(
+                        //   width: 5,
+                        //   height: 5,
+                        //   color: Colors.red,
+                        // ),
                       ],
                       // mainAxisAlignment: MainAxisAlignment.center,
                     ),
